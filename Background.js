@@ -156,7 +156,7 @@ class Building2 {
     ctx.fillRect(this.x + 13 + (this.flairX * 9.5), this.y + 12 + (this.flairY * 9.5), 6, 6)
     ctx.strokeRect(this.x + 13 + (this.flairX * 9.5), this.y + 12 + (this.flairY * 9.5), 6, 6)
 
-    ctx.strokeStyle = '#e9a8b3'
+    ctx.strokeStyle = '#f595a5'
     ctx.lineWidth = 3.3333333333333335
     ctx.strokeRect(this.x + 0, this.y + 50, 52, -51)
 
@@ -182,7 +182,7 @@ class Building3 {
     grdd1Ub2gj7gp.addColorStop(0, '#f47087')
     grdd1Ub2gj7gp.addColorStop(1, '#ef3e5c')
     ctx.fillStyle = grdd1Ub2gj7gp
-    ctx.strokeStyle = '#e9a8b3'
+    ctx.strokeStyle = '#f595a5'
     ctx.lineWidth = 5
     ctx.beginPath()
     ctx.moveTo(this.x + 100, this.y + 50)

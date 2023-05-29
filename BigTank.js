@@ -21,7 +21,7 @@ class BigTank {
 
   static hitTickLimit = 5
 
-  constructor(id, x, y, path, bodyColour, trackColour, hitPoints, enemies) {
+  constructor(id, x, y, path, bodyColour, trackColour, hitPoints, powerUp, enemies) {
     // a negative value causes the tracks to display incorrectly
     // too high will cause precision errors
     // to avoid either of these cases, start at 2^15
@@ -43,6 +43,7 @@ class BigTank {
     this.bodyColour = bodyColour
     this.trackColour = trackColour
     this.hitPoints = hitPoints
+    this.powerUp = powerUp
     this.enemies = enemies
   }
 
@@ -52,7 +53,12 @@ class BigTank {
 
     if (this.hitPoints <= 0) {
       if (this.deadTick > BigTank.deadTickLimit) {
+        score++
         enemies.delete(this.id)
+        if (typeof this.powerUp !== "undefined") {
+          powerUps.set(powerUpId, new PowerUp(powerUpId, this.x, this.y, this.powerUp.type, this.powerUp.hitPoints))
+          powerUpId++
+        }
       }
 
       this.currentAction = 'wait'
@@ -66,6 +72,7 @@ class BigTank {
     if (this.isHit) {
       if (this.hitTick > BigTank.hitTickLimit) {
         this.isHit = false
+        this.hitTick = 0
       }
       this.hitTick++
     }
@@ -376,5 +383,26 @@ class BigTank {
     }
 
     ctx.restore()
+  }
+
+  hit() {
+    this.hitPoints--
+    this.isHit = true
+    this.hitTick = 0
+
+    if (this.hitPoints == 0) {
+      var dieAudio = new Audio('./die.mp3')
+      dieAudio.volume = 0.75
+      dieAudio.play()
+      combo++
+      if (combo > 1) {
+        foreground.set(foregroundId, new PowerUpHit(foregroundId, this.x, this.y, 'Combo x' + combo, '255, 255, 255', '24px'))
+        foregroundId++
+      }
+    } else {
+      var hitAudio = new Audio('./hit.mp3')
+      hitAudio.volume = 0.25
+      hitAudio.play()
+    }
   }
 }

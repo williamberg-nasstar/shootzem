@@ -27,18 +27,26 @@ class Projectile {
       && this.currentY <= this.targetY) {
       this.fire2Audio.pause()
 
+      var hit = false
       enemies.forEach((enemy) => {
-        if (Math.abs(this.currentX - enemy.x) < 30
-          && Math.abs(this.currentY - enemy.y) < 30) {
-          var quackAudio = new Audio('./quack.mp3')
-          quackAudio.volume = 0.5
-          quackAudio.play()
-          enemy.hitPoints--
-          enemy.isHit = true
-          enemy.hitTick = 0
-          score++
+        if (enemy.constructor.name == 'BigTank') {
+          if (Math.abs(this.currentX - enemy.x) < 30
+            && Math.abs(this.currentY - enemy.y) < 30) {
+            hit = true
+            enemy.hit()
+          }
+        } else if (enemy.constructor.name == 'VeryBigTank') {
+          if (Math.abs(this.currentX - enemy.x) < 40
+            && Math.abs(this.currentY - enemy.y) < 40) {
+            hit = true
+            enemy.hit()
+          }
         }
       })
+
+      if (!hit) {
+        combo = 0
+      }
 
       projectiles.delete(this.id)
 

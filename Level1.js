@@ -53,7 +53,7 @@ class Level1 {
   ]
 
   static slowTankPath = [
-    ['forwards', 0.25, 5000]
+    ['forwards', 0.5, 5000]
   ]
 
   static wave1() {
@@ -65,6 +65,7 @@ class Level1 {
       Level1.tealTankBodyColour,
       Level1.tealTankTrackColour,
       2,
+      { type: 'projectile', hitPoints: 5 },
       enemies
     ))
 
@@ -76,22 +77,12 @@ class Level1 {
       Level1.purpleTankBodyColour,
       Level1.purpleTankTrackColour,
       1,
+      undefined,
       enemies
     ))
   }
 
   static wave2() {
-    enemies.set(3, new BigTank(
-      3,
-      canvasWidth + 100,
-      175,
-      Level1.bigTankPath2,
-      Level1.purpleTankBodyColour,
-      Level1.purpleTankTrackColour,
-      1,
-      enemies
-    ))
-
     enemies.set(4, new BigTank(
       4,
       canvasWidth + 100,
@@ -100,6 +91,35 @@ class Level1 {
       Level1.purpleTankBodyColour,
       Level1.purpleTankTrackColour,
       1,
+      undefined,
+      enemies
+    ))
+  }
+
+  static wave2a() {
+    enemies.set(7, new BigTank(
+      7,
+      canvasWidth + 100,
+      175,
+      Level1.bigTankPath1,
+      Level1.redTankBodyColour,
+      Level1.redTankTrackColour,
+      2,
+      undefined,
+      enemies
+    ))
+  }
+
+  static wave3a() {
+    enemies.set(3, new BigTank(
+      3,
+      canvasWidth + 100,
+      175,
+      Level1.bigTankPath2,
+      Level1.purpleTankBodyColour,
+      Level1.purpleTankTrackColour,
+      1,
+      undefined,
       enemies
     ))
   }
@@ -108,11 +128,12 @@ class Level1 {
     enemies.set(5, new BigTank(
       5,
       canvasWidth + 100,
-      425,
+      175,
       Level1.bigTankPath2,
       Level1.purpleTankBodyColour,
       Level1.purpleTankTrackColour,
       1,
+      undefined,
       enemies
     ))
   }
@@ -137,6 +158,12 @@ class Level1 {
     }
     if (tick == 300) {
       Level1.wave2()
+    }
+    if (tick == 400) {
+      Level1.wave2a()
+    }
+    if (tick == 700) {
+      Level1.wave3a()
     }
     if (tick == 1000) {
       Level1.wave3()

@@ -52,6 +52,7 @@ class VeryBigTank {
 
     if (this.hitPoints <= 0) {
       if (this.deadTick > VeryBigTank.deadTickLimit) {
+        score++
         enemies.delete(this.id)
       }
 
@@ -66,6 +67,7 @@ class VeryBigTank {
     if (this.isHit) {
       if (this.hitTick > VeryBigTank.hitTickLimit) {
         this.isHit = false
+        this.hitTick = 0
       }
       this.hitTick++
     }
@@ -376,5 +378,26 @@ class VeryBigTank {
     }
 
     ctx.restore()
+  }
+
+  hit() {
+    this.hitPoints--
+    this.isHit = true
+    this.hitTick = 0
+
+    if (this.hitPoints == 0) {
+      var dieAudio = new Audio('./die.mp3')
+      dieAudio.volume = 0.75
+      dieAudio.play()
+      combo++
+      if (combo > 1) {
+        foreground.set(foregroundId, new PowerUpHit(foregroundId, this.x, this.y, 'Combo x' + combo, '255, 255, 255', '24px'))
+        foregroundId++
+      }
+    } else {
+      var hitAudio = new Audio('./hit.mp3')
+      hitAudio.volume = 0.25
+      hitAudio.play()
+    }
   }
 }

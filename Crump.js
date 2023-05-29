@@ -4,7 +4,7 @@ class Crump {
   static crumpFlashFadeDuration = 4
   static bloomPointCount = 18
   static bloomSize = 12
-  static bloomPointRandomScale = 6
+  static bloomPointRandomScale = 4
 
   constructor(id, x, y) {
     this.id = id
@@ -12,7 +12,7 @@ class Crump {
     this.y = y
     this.alpha = 1
     this.crumpFlashTick = 0
-    this.boomAudio = new Audio('./boom.mp3')
+    this.boomAudio = new Audio('./boom2.mp3')
     this.boomAudio.volume = 0.75
     this.boomAudio.play()
 
@@ -20,11 +20,11 @@ class Crump {
     for (let i = 0; i < Crump.bloomPointCount; i++) {
       this.bloomPoints[i] = {}
       if (i%2==0) {
-        this.bloomPoints[i].x = Math.sin((Math.PI * 2 / Crump.bloomPointCount) * (i + 1)) * Crump.bloomSize + (Math.random() * Crump.bloomPointRandomScale)
-        this.bloomPoints[i].y = Math.cos((Math.PI * 2 / Crump.bloomPointCount) * (i + 1)) * Crump.bloomSize + (Math.random() * Crump.bloomPointRandomScale)
+        this.bloomPoints[i].x = Math.sin((Math.PI * 2 / Crump.bloomPointCount) * (i + 1)) * (Crump.bloomSize + (Math.random() * Crump.bloomPointRandomScale)) + ((Math.random() - 0.5) * Crump.bloomPointRandomScale)
+        this.bloomPoints[i].y = Math.cos((Math.PI * 2 / Crump.bloomPointCount) * (i + 1)) * (Crump.bloomSize + (Math.random() * Crump.bloomPointRandomScale)) + ((Math.random() - 0.5) * Crump.bloomPointRandomScale)
       } else {
-        this.bloomPoints[i].x = Math.sin((Math.PI * 2 / Crump.bloomPointCount) * (i + 1)) * Crump.bloomSize - (Math.random() * Crump.bloomPointRandomScale)
-        this.bloomPoints[i].y = Math.cos((Math.PI * 2 / Crump.bloomPointCount) * (i + 1)) * Crump.bloomSize - (Math.random() * Crump.bloomPointRandomScale)
+        this.bloomPoints[i].x = Math.sin((Math.PI * 2 / Crump.bloomPointCount) * (i + 1)) * (Crump.bloomSize - (Math.random() * Crump.bloomPointRandomScale)) + ((Math.random() - 0.5) * Crump.bloomPointRandomScale)
+        this.bloomPoints[i].y = Math.cos((Math.PI * 2 / Crump.bloomPointCount) * (i + 1)) * (Crump.bloomSize - (Math.random() * Crump.bloomPointRandomScale)) + ((Math.random() - 0.5) * Crump.bloomPointRandomScale)
       }
     }
   }

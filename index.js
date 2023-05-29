@@ -22,9 +22,11 @@ const playerY = canvasHeight - 50
 
 const background = new Map()
 const enemies = new Map()
+const powerUps = new Map()
 const crumps = new Map()
 const muzzleFlashes = new Map()
 const projectiles = new Map()
+const foreground = new Map()
 
 var storyboardFrame = ''
 
@@ -32,8 +34,12 @@ var projectileCountLimit = 1
 var crumpId = 1
 var muzzleFlashId = 1
 var enemyId = 1
+var powerUpId = 1
 var projectileId = 1
 var backgroundId = 1
+var foregroundId = 1
+
+var combo = 0;
 
 const player = new Player(playerX, playerY, 30, '#2222FF')
 var score = 0
@@ -57,7 +63,7 @@ function draw() {
 
   ctx.save()
 
-  ctx.fillStyle = '#ffb0bd'
+  ctx.fillStyle = '#db6377'
   ctx.fillRect(0, 0, canvasWidth, canvasHeight)
 
   ctx.fillStyle = '#42bfdb'
@@ -80,12 +86,18 @@ function draw() {
   enemies.forEach((enemy) => {
     enemy.update()
   })
+  powerUps.forEach((powerUp) => {
+    powerUp.update()
+  })
   player.update()
   muzzleFlashes.forEach((muzzleFlash) => {
     muzzleFlash.update()
   })
   projectiles.forEach((projectile) => {
     projectile.update()
+  })
+  foreground.forEach((foregroundElement) => {
+    foregroundElement.update()
   })
 
   ctx.save()
@@ -133,6 +145,14 @@ function draw() {
 // }
 
 window.addEventListener('mousedown', (e) => {
+  for (let [id, powerUp] of powerUps) {
+    if (Math.abs(e.clientX - powerUp.x) < 20
+      && Math.abs(e.clientY - powerUp.y) < 20) {
+      powerUp.hit()
+      return
+    }
+  }
+
   if (e.clientX >= player.x
     && e.clientY <= player.y
     && e.clientX < canvasWidth
