@@ -1,5 +1,7 @@
 class Level1 {
 
+  tickCount = 0
+
   static purpleTankBodyColour = '#791394'
   static purpleTankTrackColour = '#b063db'
 
@@ -151,26 +153,155 @@ class Level1 {
     ))
   }
 
+  draw() {
+    ctx.save()
+
+    ctx.fillStyle = '#db6377'
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight)
+
+    ctx.fillStyle = '#42bfdb'
+    ctx.fillRect(0, 0, 150, canvasHeight)
+
+    const image = new Image()
+    image.src = 'water_invert_transparency.png'
+    ctx.globalAlpha = 0.5
+    ctx.drawImage(image, 0, 0);
+    ctx.globalAlpha = 1
+
+    ctx.restore()
+
+    background.forEach((backgroundElement) => {
+      backgroundElement.update()
+    })
+    crumps.forEach((crump) => {
+      crump.update()
+    })
+    enemies.forEach((enemy) => {
+      enemy.update()
+    })
+    powerUps.forEach((powerUp) => {
+      powerUp.update()
+    })
+    player.update()
+    muzzleFlashes.forEach((muzzleFlash) => {
+      muzzleFlash.update()
+    })
+    projectiles.forEach((projectile) => {
+      projectile.update()
+    })
+    foreground.forEach((foregroundElement) => {
+      foregroundElement.update()
+    })
+
+    ctx.save()
+    ctx.beginPath()
+    ctx.strokeStyle = 'black'
+    ctx.fillStyle = '#DDDDDD'
+    ctx.rect(10, 10, canvasWidth - 20, canvasHeight - 20)
+    ctx.stroke()
+    ctx.fillRect(0, 0, canvasWidth, 10)
+    ctx.fillRect(0, 0, 10, canvasHeight)
+    ctx.fillRect(canvasWidth - 10, 0, 10, canvasHeight)
+    ctx.fillRect(0, canvasHeight - 10, canvasWidth, 10)
+    ctx.restore()
+
+    // if (failed) {
+    //   ctx.fillStyle = 'black'
+    //   ctx.font = "30px Comic Sans MS"
+    //   ctx.fillText("doesnt matter now", 25, 50)
+
+    //   ctx.fillStyle = '#'+Math.random().toString(16).substr(-6)
+    //   ctx.font = "75px Comic Sans MS"
+    //   ctx.fillText("CONGRATULATIONS", 48, canvasHeight / 2)
+    //   ctx.fillText("YOU FAILED", 48, (canvasHeight / 2) + 100)
+    // } else {
+    //   ctx.fillStyle = 'black'
+    //   ctx.font = "30px Arial"
+    //   ctx.fillText(score, 25, 50)
+    // }
+  }
 
   tick() {
-    if (tick == 0) {
+    if (this.tickCount == 0) {
       Level1.wave1()
     }
-    if (tick == 300) {
+    if (this.tickCount == 300) {
       Level1.wave2()
     }
-    if (tick == 400) {
+    if (this.tickCount == 400) {
       Level1.wave2a()
     }
-    if (tick == 700) {
+    if (this.tickCount == 700) {
       Level1.wave3a()
     }
-    if (tick == 1000) {
+    if (this.tickCount == 1000) {
       Level1.wave3()
     }
-    if (tick == 1300) {
+    if (this.tickCount == 1300) {
       Level1.wave4()
     }
+
+    this.tickCount++
+  }
+
+  mousedownListener(e) {
+    for (let [id, powerUp] of powerUps) {
+      if (Math.abs(e.clientX - powerUp.x) < 20
+        && Math.abs(e.clientY - powerUp.y) < 20) {
+        powerUp.hit()
+        return
+      }
+    }
+
+    if (e.clientX >= player.x
+      && e.clientY <= player.y
+      && e.clientX < canvasWidth
+      && e.clientY < canvasHeight
+      && projectiles.size < projectileCountLimit) {
+
+      // calculate where the end of the barrel is using this code lifted from Player.js - yuck!
+      var theta = Math.atan((yMouse - playerY) / (xMouse - playerX))
+      if (xMouse - playerX < 0) {
+        theta += Math.PI;
+      }
+
+      const d = 1 + (0.15 * Math.sqrt((xMouse - playerX) + (playerY - yMouse))) // foreshortening factor
+      var a = 10 * d // fore barrel
+
+      var ax = a * Math.cos(theta),
+          ay = a * Math.sin(theta)
+
+      projectiles.set(projectileId, new Projectile(
+        projectileId,
+        e.clientX,
+        e.clientY,
+        playerX + ax,
+        playerY + ay
+      ))
+      projectileId++;
+
+      muzzleFlashes.set(muzzleFlashId, new MuzzleFlash(
+        muzzleFlashId,
+        playerX + ax,
+        playerY + ay
+      ))
+      muzzleFlashId++;
+    }
+  }
+
+  mousemoveListener(e) {
+    xMouse = e.clientX
+    yMouse = e.clientY
+  }
+
+  start() {
+    window.addEventListener('mousedown', this.mousedownListener)
+    window.addEventListener('mousemove', this.mousemoveListener)
+  }
+
+  end() {
+    window.removeEventListener('mousedown', this.mousedownListener)
+    window.removeEventListener('mousemove', this.mousemoveListener)
   }
 
 }
