@@ -1,4 +1,4 @@
-$fn=60;
+$fn=200;
 projection() {
 rotate([-85,50,0]) {
 
